@@ -9,6 +9,10 @@ This repo will install TFE FDO on Podman in Mounted Disk mode.
 
 * TFE FDO license
 
+# Diagram
+
+![tfe_fdo_on_podman_in_mounted_disk_mode](https://github.com/dmitryuchuvatov/tfe-fdo-podman-md/assets/119931089/a6c45e2d-6dce-49eb-94e1-c0e6d3027f49)
+
 # How To
 
 ## Clone repository

@@ -68,7 +68,7 @@ write_files:
             name: "terraform-enterprise_terraform-enterprise-cache-pvc"
         volumes:
         - hostPath:
-            path: "/opt/fdo/certs"
+            path: "/fdo/certs"
             type: "Directory"
           name: "certs"
         - emptyDir:
@@ -81,7 +81,7 @@ write_files:
             medium: "Memory"
           name: "tmp"
         - hostPath:
-            path: "/opt/fdo/data"
+            path: "/fdo/data"
             type: "Directory"
           name: "data"
         - hostPath:
@@ -104,28 +104,13 @@ write_files:
     content: |
       #!/usr/bin/env bash
       
-      # Create folders for FDO installation, TLS certificates and data
-      mkdir /opt/fdo
-      mkdir /opt/fdo/certs
-      mkdir /opt/fdo/data
+      # Create folders for FDO installation and TLS certificates
 
-      # Install unzip command 
-      dnf install unzip -y 
-      
-      # Install AWS CLI
-      pushd /var/tmp
-      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      unzip awscliv2.zip
-      sudo ./aws/install --bin-dir /usr/bin --install-dir /usr/local/aws-cli --update
+      mkdir -p /fdo/certs
+      mkdir -p /fdo/data
 
-      # Prepare certificates
-      aws s3 cp s3://${environment_name}-filesbucket/fullchain.pem /var/tmp/cert.pem
-      aws s3 cp s3://${environment_name}-filesbucket/fullchain.pem /var/tmp/bundle.pem
-      aws s3 cp s3://${environment_name}-filesbucket/key.pem /var/tmp/key.pem
-
-      cp /var/tmp/cert.pem /opt/fdo/certs/cert.pem
-      cp /var/tmp/bundle.pem /opt/fdo/certs/bundle.pem 
-      cp /var/tmp/key.pem /opt/fdo/certs/key.pem
+      echo ${full_chain} | base64 --decode > /fdo/certs/cert.pem
+      echo ${private_key_pem} | base64 --decode > /fdo/certs/key.pem
    
   - path: /var/tmp/tfe.sh   
     permissions: '0750'
@@ -133,14 +118,16 @@ write_files:
       #!/usr/bin/env bash    
 
       # Copy the YAML config to install path
-      cp /var/tmp/kube.yaml /opt/fdo/
-      pushd /opt/fdo/
+      cp /var/tmp/kube.yaml /fdo/
+      cp /fdo/certs/cert.pem /fdo/certs/bundle.pem
+
+      pushd /fdo/
 
       # Authenticate to container registry 
       echo "${tfe_license}" | podman login --username terraform images.releases.hashicorp.com --password-stdin
       
       # Deploy TFE
-      podman play kube /opt/fdo/kube.yaml
+      podman play kube /fdo/kube.yaml
 
 runcmd:
   - sudo bash /var/tmp/podman.sh 

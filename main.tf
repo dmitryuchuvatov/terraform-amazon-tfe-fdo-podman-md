@@ -153,7 +153,8 @@ resource "aws_instance" "tfe" {
     tfe_password      = var.tfe_password
     tfe_release       = var.tfe_release
     tfe_license       = var.tfe_license
-    environment_name  = var.environment_name
+    full_chain        = base64encode("${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}")
+    private_key_pem   = base64encode("${acme_certificate.certificate.private_key_pem}")
   })
 
   tags = {
@@ -206,28 +207,6 @@ resource "aws_acm_certificate" "cert" {
   private_key       = acme_certificate.certificate.private_key_pem
   certificate_body  = acme_certificate.certificate.certificate_pem
   certificate_chain = acme_certificate.certificate.issuer_pem
-}
-
-# Certificates -> S3 bucket
-
-resource "aws_s3_bucket" "tfe_files" {
-  bucket = "${var.environment_name}-filesbucket"
-
-  tags = {
-    Name = "${var.environment_name}-filesbucket"
-  }
-}
-
-resource "aws_s3_object" "certificate" {
-  bucket  = aws_s3_bucket.tfe_files.bucket
-  key     = "fullchain.pem"
-  content = "${acme_certificate.certificate.certificate_pem}${acme_certificate.certificate.issuer_pem}"
-}
-
-resource "aws_s3_object" "private_key" {
-  bucket  = aws_s3_bucket.tfe_files.bucket
-  key     = "key.pem"
-  content = acme_certificate.certificate.private_key_pem
 }
 
 # IAM

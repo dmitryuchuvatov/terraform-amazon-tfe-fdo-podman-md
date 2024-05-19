@@ -11,20 +11,21 @@ This repo will install TFE FDO on Podman in Mounted Disk mode.
 
 # Diagram
 
-![tfe_fdo_on_podman_in_mounted_disk_mode](https://github.com/dmitryuchuvatov/tfe-fdo-podman-md/assets/119931089/a6c45e2d-6dce-49eb-94e1-c0e6d3027f49)
+![tfe_fdo_on_podman_in_mounted_disk_mode](https://github.com/dmitryuchuvatov/terraform-amazon-tfe-fdo-podman-md/assets/119931089/4ea8ebdd-6c0b-4132-b327-61a05389ff25)
+
 
 # How To
 
 ## Clone repository
 
 ```
-git clone https://github.com/dmitryuchuvatov/tfe-fdo-podman-md.git
+git clone https://github.com/dmitryuchuvatov/terraform-amazon-tfe-fdo-podman-md.git
 ```
 
 ## Change folder
 
 ```
-cd tfe-fdo-podman-md
+cd terraform-amazon-tfe-fdo-podman-md
 ```
 
 ## Rename the file called `terraform.tfvars-sample` to `terraform.tfvars` and replace the values with your own.
@@ -37,7 +38,7 @@ vpc_cidr          = "10.200.0.0/16"                        # The IP range for th
 route53_zone      = "tf-support.hashicorpdemo.com"         # The domain of your hosted zone in Route 53
 route53_subdomain = "tfe-fdo-podman-md"                    # The subomain of the URL
 cert_email        = "dmitry.uchuvatov@hashicorp.com"       # The email address used to register the certificate
-tfe_release       = "v202312-1"                            # TFE release version (https://developer.hashicorp.com/terraform/enterprise/releases)
+tfe_release       = "v202404-2"                            # TFE release version (https://developer.hashicorp.com/terraform/enterprise/releases)
 tfe_password      = "Password1#"                           # TFE encryption password
 tfe_license       = "02MV4UU4..."                          # Value from the license file                                   
 ```

@@ -1,6 +1,6 @@
-# TFE FDO - Podman
+# Terraform Enterprise Flexible Deployment Options in Mounted Disk mode on Podman (AWS)
 
-This repo will install TFE FDO on Podman in Mounted Disk mode.
+This repo will install TFE FDO in Mounted Disk mode on Podman (AWS)
 
 # Prerequisites
 * Install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
